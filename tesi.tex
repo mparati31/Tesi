@@ -1,0 +1,101 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                         %
+%           TEMPLATE LATEX PER TESI                                       %
+%           ______________                                                %
+%                                                                         %
+%           Ultima revisione: 24 giugno 2019                              %
+%           Revisori: G.Presti; L.A.Ludovico; F. Avanzini                 %
+%                                                                         %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[12pt,italian]{report}
+\usepackage{tesi}
+
+% CORSO DI LAUREA:
+\def\myCDL{Corso di Laurea triennale in Informatica}
+
+% TITOLO TESI:
+\def\myTitle{Pattern di assegnamento ottimizzati per l'efficienza energetica in edge computing}
+
+% AUTORE:
+\def\myName{Manuel Parati}
+\def\myMat{Matr. 958584}
+
+% RELATORE E CORRELATORE:
+\def\myRefereeA{Prof. Alberto Ceselli}
+\def\myRefereeB{Prof. Marco Premoli}
+
+% ANNO ACCADEMICO
+\def\myYY{2021-2022}
+
+% Il seguente comando introduce un elenco delle figure dopo l'indice
+%\figurespagetrue
+
+% Il seguente comando introduce un elenco delle tabelle dopo l'indice
+%\tablespagetrue
+
+%
+%       PREAMBOLO
+%       Inserire qui eventuali package da includere o definizioni di comandi personalizzati
+%
+
+% Package di formato
+\usepackage[a4paper]{geometry}      % Formato del foglio
+\usepackage[italian]{babel}         % Supporto per l'italiano
+\usepackage[utf8]{inputenc}         % Supporto per UTF-8
+%\usepackage[a-1b]{pdfx}            % File conforme allo standard PDF-A (obbligatorio per la consegna)
+
+% Package per la grafica
+\usepackage{graphicx}               % Funzioni avanzate per le immagini
+\usepackage{hologo}                 % Bibtex logo with \hologo{BibTeX}
+\usepackage{epsfig}                % Permette immagini in EPS
+%\usepackage{xcolor}                % Gestione avanzata dei colori
+
+% Package tipografici
+\usepackage{amssymb,amsmath,amsthm} % Simboli matematici
+\usepackage{listings}               % Scrittura di codice
+
+% Package ipertesto
+\usepackage{url}                    % Visualizza e rendere interattii gli URL
+\usepackage{hyperref}               % Rende interattivi i collegamenti interni
+
+
+\begin{document}
+
+% Creazione automatica del frontespizio
+\frontespizio
+\beforepreface
+
+%
+%       RINGRAZIAMENTI
+%
+
+\prefacesection{Ringraziamenti}
+Questa sezione, contiene i ringraziamenti.
+
+%
+%       Creazione automatica dell'indice
+%
+
+\afterpreface
+
+% 
+%       CAPITOLI
+% 
+
+\input{capitoli/01-introduzione.tex}
+\input{capitoli/02-modellazione-del-sistema.tex}
+
+%
+%       BIBLIOGRAFIA
+%
+
+\bibliographystyle{unsrt}
+\bibliography{bibliografia}
+\addcontentsline{toc}{chapter}{Bibliografia}
+
+
+% Pagina dichiusura del LIM
+% \closingpage
+
+\end{document}

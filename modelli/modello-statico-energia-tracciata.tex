@@ -1,0 +1,24 @@
+\begin{align}
+    \tag{\ref*{eq:migrinf-objvar}}
+    \min\quad       & \beta \sum_{t \in T} \sum_{i \in A} \sum_{k \in K}{d^t_i m_{ik} x_{ik}} + \gamma \sum_{t \in T} \sum_{k \in K}{c_k^t z_k^t} + \sum_{t \in T} \sum_{k \in K}{s_k^t}
+\end{align}
+\vspace*{-6mm}
+\begin{align}
+    \text{s.t.\quad}
+    \tag{\ref*{eq:migrinf-c1}}
+    & v_k^t = \sum_{i \in A}{d^t_i x_{ik}}              &   & \forall k \in K, \forall t \in T                 \\
+    \tag{\ref*{eq:migrinf-c2}}
+    & \sum_{k \in K}{x_{ik}} = 1                        &   & \forall i \in A                                  \\
+    \tag{\ref*{eq:statico-c3var}}
+    & z_k^1 + e_k^1 + p_k = v_k^1 + g_k^1 + s_k^1       &   & \forall k \in K                                  \\
+    \tag{\ref*{eq:statico-c4var}}
+    & z_k^t + e_k^t + g_k^{t-1} = v_k^t + g_k^t + s_k^t &   & \forall k \in K, \forall t \in T \setminus \{1\} \\
+    \tag{\ref*{eq:migrinf-c5}}
+    & g_k^t \leq G_k                                    &   & \forall k \in K, \forall t \in T                 \\
+    \tag{\ref*{eq:migrinf-c6}}
+    & v_k^t \leq C_k                                    &   & \forall k \in K, \forall t \in T                 \\
+    \tag{\ref*{eq:migrinf-c7}}
+    & x_{ik} \in \{0,1\}                                &   & \forall i \in A, \forall k \in K                 \\
+    \label{eq:statico-objvar}
+    & x, g, s, v, z \geq 0                              &   &
+\end{align}

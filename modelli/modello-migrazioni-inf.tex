@@ -2,11 +2,11 @@
     \min\quad       & \beta \sum_{t \in T} \sum_{i \in A} \sum_{k \in K}{d^t_i m_{ik} x_{ik}} + \gamma \sum_{t \in T} \sum_{k \in K}{c_k^t z_k^t}
     \label{eq:migrinf-obj}
 \end{align}
-\vspace*{-10mm}
+\vspace*{-6mm}
 \begin{align}
     \text{s.t.\quad}
     \label{eq:migrinf-c1}
-    & \sum_{i \in A}{d^t_i x_{ik}} = v_k^t          &   & \forall k \in K, \forall t \in T                 \\
+    & v_k^t = \sum_{i \in A}{d^t_i x_{ik}}          &   & \forall k \in K, \forall t \in T                 \\
     \label{eq:migrinf-c2}
     & \sum_{k \in K}{x_{ik}} = 1                    &   & \forall i \in A                                  \\
     \label{eq:migrinf-c3}

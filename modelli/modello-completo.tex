@@ -2,11 +2,11 @@
     \min\quad       & \alpha \sum_{t \in T} \sum_{i \in A} \sum_{\substack{(j,k) \in \\ K \times K}}d^{t}_{i} l_{jk} y^t_{ijk} + \beta \sum_{t \in T} \sum_{i \in A} \sum_{k \in K}d^{t}_{i} m_{ik} x^t_{ik} + \gamma \sum_{t \in T} \sum_{k \in K}{c_k^t z_k^t}
     \label{eq:complete-obj}
 \end{align}
-\vspace*{-10mm}
+\vspace*{-6mm}
 \begin{align}
     \text{s.t.\quad}
     \label{eq:complete-c1}
-    & \sum_{i \in A}{d^t_i x_{ik}^t} = v_k^t        &   & \forall k \in K, \forall t \in T                                  \\
+    & v_k^t = \sum_{i \in A}{d^t_i x_{ik}^t}        &   & \forall k \in K, \forall t \in T                                  \\
     \label{eq:complete-c2}
     & \sum_{k \in K}{x_{ik}^t} = 1                  &   & \forall i \in A, \forall t \in T                                  \\
     \label{eq:complete-c3}

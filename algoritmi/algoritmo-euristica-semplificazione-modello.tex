@@ -1,0 +1,38 @@
+\begin{algorithm}
+    \caption{...}
+    \label{alg:euristica-sempl}
+    \begin{algorithmic}[1]
+        \Require l'istanza da risolvere, composta dai dati $\bar{C}, \bar{G}, \bar{d}, \bar{l}, \bar{m}, \bar{e}, \bar{c}$
+        \Ensure il risultato del problema, quindi i valori delle variabili $\hat{x}, \hat{g}, \hat{v}, \hat{z}$
+        \State Siano $\hat{x}, \hat{g}, \hat{v}, \hat{z}$ le variabili della soluzione globale
+        \State $\operatorname{obj} \gets 0$ \label{ciao}
+        \State $t \gets -1$
+        \State $S \gets \operatorname{split}(\bar{C}, \bar{G}, \bar{d}, \bar{l}, \bar{m}, \bar{e}, \bar{c})$
+        \For{$\textbf{all} ~ j \in \{0, \dots, |S|-1\}$}
+            \State \{siano $j$ considerati in ordine crescente\}
+            \State $(C, G, d, l, m, e, c) \gets S[j]$
+            \If{$j = 0$}
+                \State $p_k \gets 0 ~ \forall k \in K$
+            \Else
+                \State $p_k \gets \hat{g}^t_k ~ \forall k \in K$
+            \EndIf
+            \State $(x, g, v, z, s) \gets \operatorname{risolvi}(C, G, d, l, m, e, c, p)$
+            \State $\operatorname{costo\_migrazione} \gets 0$
+            \If{$j > 0$}
+                \For{$\textbf{all} ~ i \in A$}
+                \State $k_{\operatorname{prec}} \gets \underset{k \in K}{\arg\max} ~ \hat{x}^t_{ik}$
+                \State $k_{\operatorname{succ}} \gets \underset{k \in K}{\arg\max} ~ x^0_{ik}$
+                \If{$k_{\operatorname{prec}} \neq k_{\operatorname{succ}}$}
+                    \State $\operatorname{costo\_migrazione} \gets \operatorname{costo\_migrazione} ~ + ~ \bar{d}^t_i \cdot l_{k_{\operatorname{prev}} k_{\operatorname{succ}}}$
+                \EndIf
+                \EndFor
+            \EndIf
+            \State $\operatorname{obj} \gets \operatorname{fo}(d, m, c, x, z, s) - \sum_{u \in \{0, \dots, |S[j]|-1\}}\sum_{k \in K} s^u_k ~ + ~ \alpha \cdot \operatorname{costo\_migrazione}$
+            \State $\hat{x} \gets \hat{x} \cup x$
+            \State $\hat{g} \gets \hat{g} \cup g$
+            \State $\hat{v} \gets \hat{v} \cup v$
+            \State $\hat{z} \gets \hat{z} \cup z$
+            \State $t \gets t + |S[j]|$
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}

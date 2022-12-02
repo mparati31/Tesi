@@ -1,0 +1,39 @@
+\begin{algorithm}
+    \caption{Pseudocodice euristica 2}
+    \label{alg:euristica-modello}
+    \begin{algorithmic}[1]
+        \Require l'istanza da risolvere, composta dai dati $\bar{C}, \bar{G}, \bar{d}, \bar{l}, \bar{m}, \bar{e}, \bar{c}$
+        \Ensure il piano degli assegnamenti risultante, quindi il valore delle variabili $\hat{x}$
+        \State Siano $\hat{x}, \hat{g}, \hat{v}, \hat{z}$ le variabili riguardanti il risultato completo
+        \State $(L, C, G, d, l, m, e, c) \gets \operatorname{aggrega}(\bar{C}, \bar{G}, \bar{d}, \bar{l}, \bar{m}, \bar{e}, \bar{c})$ \label{algo1:l:aggrega}
+        \State $x \gets \operatorname{calcola\_assegnamenti}(C, G, d, l, m, e, c)$
+        \State $t \gets 0$
+        \State $\operatorname{costi\_migrazione} \gets 0$
+        \State \{generazione del risultato completo\}
+        \For{$\textbf{all} ~ j \in \{0, \dots, |L| - 1\}$}
+            \For{$\textbf{all} ~ u \in \{0, \dots, L[j] - 1\}$}
+                \State $\hat{x}^t_{ik} \gets x^j_{ik} ~ \forall i \in A, \forall k \in K$
+                \If{$n = 0$}
+                    \State $p_k \gets 0 ~ \forall k \in K$
+                \Else
+                    \State $p_k \gets \hat{g}^{t-1}_k ~ \forall k \in K$
+                \EndIf
+                \State \{ricostruzione del traffico di energia\}
+                \State $\hat{v}^t_k = \sum_{i \in A} \bar{d}^t_i x^t_{ik} ~ \forall k \in K$
+                \State $\hat{g}^t_k \gets \min\{0, ~ \max\{p_k + \bar{e}^t_k- \hat{v}^t_k, ~ \bar{G}_k\}\} ~ \forall k \in K$
+                \State $\hat{z}^t_k = \min\{0, ~ \hat{v}^t_k - \left(p_k + \bar{e}^t_k\right)\} ~ \forall k \in K$
+                \State $t \gets t + 1$
+            \EndFor
+            \State \{calcolo dei costi di migrazione\}
+            \If{$j > 0$}
+            \For{$\textbf{all} ~ i \in A$}
+                \State $k_{\operatorname{prec}} \gets \underset{k \in K}{\arg\max} ~ \hat{x}^{t-1-L[j]}_{ik}$
+                \State $k_{\operatorname{succ}} \gets \underset{k \in K}{\arg\max} ~ x^{t-1}_{ik}$
+                \If{$k_{\operatorname{prec}} \neq k_{\operatorname{succ}}$}
+                    \State $\operatorname{costo\_migrazione} \gets \operatorname{costo\_migrazione} ~ + ~ \bar{d}^{t-1-L[j]}_i \cdot l_{k_{\operatorname{prev}} k_{\operatorname{succ}}}$
+                \EndIf
+            \EndFor
+            \EndIf
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}

@@ -59,8 +59,34 @@
 \usepackage{url}                    % Visualizza e rendere interattii gli URL
 \usepackage{hyperref}               % Rende interattivi i collegamenti interni
 
+% Package algoritmi
+\usepackage{algorithm,algpseudocode}
+
+% Package appendice
+\usepackage[toc,page]{appendix}
+
 \numberwithin{equation}{section}    % Numerazione delle equazione indicando la sezione
 \allowdisplaybreaks                 % Permette di spezzare i modelli quanto necessario
+
+% Permette di avere "Input" e "Output" negli algoritmi invece di "Require" e "Ensure"
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+% Definisce il testo da inserire nei riferimenti agli algoritmi
+\newcommand{\algorithmautorefname}{algoritmo}
+
+% Permette di avere la scritta "Appendici" invece di "Appendices".
+\renewcommand{\appendixpagename}{Appendici}
+\renewcommand{\appendixtocname}{Appendici}
+
+% Permette di avere "Algoritmo" nella caption.
+\floatname{algorithm}{Algoritmo}
+
+% Permette di fare riferimenti alle righe degl algoritmi.
+\makeatletter
+\patchcmd{\ALG@step}{\addtocounter{ALG@line}{1}}{\refstepcounter{ALG@line}}{}{}
+\newcommand{\ALG@lineautorefname}{linea}
+\makeatother
 
 
 \begin{document}
@@ -90,6 +116,14 @@ Questa sezione, contiene i ringraziamenti.
 \input{capitoli/02-modellazione-del-sistema.tex}
 \input{capitoli/03-modelli-di-ottimizzazione.tex}
 \input{capitoli/04-algoritmi-euristici.tex}
+
+%
+%       APPENDICI
+%
+
+\begin{appendices}
+    \input{appendici/01-modelli-di-ottimizzazione-frammentazione.tex}
+\end{appendices}
 
 %
 %       BIBLIOGRAFIA

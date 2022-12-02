@@ -1,0 +1,13 @@
+\begin{align}
+    \min\quad \sum_{i \in I} \sum_{j \in I} d_{ij} x_{ij} & \label{obj}
+\end{align}
+\vspace*{-6mm}
+\begin{align}
+    \text{s.t.\quad} & \sum_{j \in I} x_{ij} = 1 & & \forall i \in I \label{assign} \\
+                & x_{ij} \leq y_j & & \forall i \in I, \forall j \in I \label{open} \\
+                & \sum_{j \in I} y_j = p & & \label{choosep}\\
+                & x_{ij} \leq x_{kj} & & \forall i \in I, \forall j \in I, \forall k \in I: j > i \wedge k > i \wedge k < j \label{compactF} \\
+                & x_{ij} \leq x_{kj} & & \forall i \in I, \forall j \in I, \forall k \in I: j < i \wedge k < i \wedge k > j \label{comactB} \\
+                & x_{ij} \in \{0,1\} & & \forall i \in I, \forall j \in I \label{intx}\\
+                & y_j \in \{0,1\} & & \forall j \in I \label{inty}
+\end{align}

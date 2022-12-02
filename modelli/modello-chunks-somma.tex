@@ -1,0 +1,30 @@
+\begin{align}
+    \min\quad       & \sum_{i \in I} d^i
+    \label{eq:equals-obj}
+\end{align}
+\vspace*{-6mm}
+\begin{align}
+    \text{s.t.\quad}
+    \label{eq:equals-c1}
+    & \sum_{i \in I}{x_i^j = 1}                             &   & \forall j \in J                                  \\
+    \label{eq:equals-c2}
+    & \sum_{j \in J}{x_i^j} \geq 1                          &   & \forall i \in I \setminus \{0\}                  \\
+    \label{eq:equals-c3}
+    & x^0_0 = 1                                             &   &                                                  \\
+    \label{eq:equals-c4}
+    & s^0_0 = 1                                             &   &                                                  \\
+    \label{eq:equals-c5}
+    & s^i_0 = 0                                             &   & \forall i \in I \setminus \{0\}                  \\
+    \label{eq:equals-c6}
+    & s^i_j \geq x^i_j - x^i_{j-1}                          &   & \forall i \in I, \forall j \in J \setminus \{0\} \\
+    \label{eq:equals-c7}
+    & \sum_{j \in J}{s^i_j} = 1                             &   & \forall i \in I                                  \\
+    \label{eq:equals-c8}
+    & d^i \geq \sum_{j \in J}{x^i_jv_j} - m                 &   & \forall i \in I                                  \\
+    \label{eq:equals-c9}
+    & d^i \geq -\left(\sum_{j \in J}{x^i_jv_j} - m\right)   &   & \forall i \in I                                  \\
+    \label{eq:equals-c10}
+    & x^i_j \in \{0, 1\}   &   & \forall i \in I            &   &                                                  \\
+    \label{eq:equals-c11}
+    & s^i_j \in \{0, 1\}   &   & \forall i \in I
+\end{align}

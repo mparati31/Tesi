@@ -1,0 +1,45 @@
+\chapter{Modelli di ottimizzazione aggiuntivi}
+\label{cap:modelli-di-ottimizzazione-framm}
+
+\section{Frammentazione di array in blocchi della stessa somma}
+\label{sec:framm-equals}
+
+Dato un array, l'obbiettivo di questo modello è quello di frammentarlo in un numero predefinito di blocchi aventi approssimativamente la stessa somma.
+
+
+\paragraph{Dati.} Sia $I$ l'insieme dei blocchi e $J$ quello degli indici dell'array. Il numero di blocchi che si intendono ottenere è indicato con $n$, e il valore del $j$-esimo elemento viene rappresentato con $v_j$ ($j \in J$). Con $m$ si denota invece la somma che avrebbe ciascun blocco nel caso in cui sia possibile attuare una frammentazione perfetta, vale a dire $m = \frac{1}{|I|}\sum_{j \in J}v_j$.
+
+\paragraph{Variabili.} Siano $x^i_j$ variabili binarie che assumono valore 1 se il $j$-esimo elemento dell'array fa parte dell'$i$-esimo blocco, 0 altrimenti. Le variabili $s^i_j$ sono anch'esse binarie e assumono valore 1 se il primo elemento dl'$i$-esimo blocco è il $j$-esimo elemento dell'array, altrimenti 0. Le variabili $d^i$ definiscono la distanza tra la somma del blocco $i$ e il valore ottimo $m$.
+
+\paragraph{Modello.} Di seguito la rappresentazione matematica.
+
+\input{modelli/modello-chunks-somma.tex}
+
+\paragraph{Obbiettivo.} L'obbiettivo (\autoref{eq:equals-obj}) è quello di ottenere somme dei blocchi il più possibile vicine tra loro, andando a minimizzare la somma delle distanze che li separa dal valore ottimo $m$.
+
+\paragraph{Vincoli.} I vincoli \ref{eq:equals-c1} impongono ad ogni elemento dell'array di far parte di un singolo blocco, mentre i \ref{eq:equals-c2} fanno in modo che ogni blocco contenga almeno un elemento. I vincoli \ref{eq:equals-c3}, \ref{eq:equals-c4}, \ref{eq:equals-c5}, \ref{eq:equals-c6}, \ref{eq:equals-c7} impongono ad ogni blocco di avere un singolo indice di partenza e fanno in modo che i suoi elementi siano consecutivi. Da notare come la presenza dei vincoli \ref{eq:equals-c2} sia dovuta al fatto che i \ref{eq:equals-c6} non garantiscono che ogni blocco abbia un singolo indice iniziale, ma che se esiste allora è unico. I vincoli \ref{eq:equals-c8} e \ref{eq:equals-c9} sono l'implenentazione in programmazione lineare del concetto di valore assoluto, e definiscono il valore delle variabili $d$:
+\begin{equation}
+    d^i = \left| \sum_{j \in J}x^i_jv_j - m \right| ~ \forall i \in I
+\end{equation}
+
+\subsection{Algoritmo euristico}
+
+Quando la dimensione dell'array o quelle del numero di blocchi da ricavare aumenta, il tempo necessario a determinare la soluzione ottima cresce velocemente, e di conseguenza per semplificare la complessità del modello viene introdotto un algoritmo euristico. Il problema viene semplificato scomponendo l'array in $m$ parti composte da $n/m$ elementi: ciascuna viene risolta indipendentemente, imponendo di generare un numero di blocchi che corrisponde all'incisione percentuale della somma dei suoi elementi rispetto alla somma dell'intero array. Nelle ottimizzazioni effettuate, la funzione obbiettivo deve minimizzare la distanza della somma dei blocchi rispetto allo stesso valore, quindi in ognuna $m$ deve essere calcolato consideranto l'array completo e non la sottoparte da risolvere. Questo algoritmo non determina la soluzione ottima, ma fornisce una buona approssimativamente che peggiora con l'aumentare delle scomposizioni attuate.
+
+
+\section{Frammentazione di array in blocchi omogenei}
+\label{sec:framm-omogenei}
+
+Dato un array, lo scopo di questo modello di ottimizzazione è quello di frammentarlo in un numero predefinito di blocchi in modo da minimizzare la differenza dei suoi elementi all'interno di ciascun blocco.
+
+\paragraph{Dati.} Sia $I$ l'insieme degli elementi dell'array, $d_{ij}$ una misura della differenza tra gli elementi $i \in I$ e $j \in I$, e $p$ un parametro che definisce quanti blocchi si intende generare.
+
+\paragraph{Variabili.} Le variabili $y_j$ valgono $1$ se l'elemento $j$ è scelto come rappresentante, $0$ altrimenti. Le variabili $x_{ij}$ valgono $1$ se l'elemento $i$ è inserito in un blocco il cui rappresentante è $j$, $0$ altrimenti.
+
+\paragraph{Modello.} Di seguito la rappresentazione matematica del modello.
+
+\input{modelli/modello-p-median.tex}
+
+\paragraph{Obbiettivo.} La funzione obiettivo \eqref{obj} minimizza la somma delle differenze tra un elemento e il rappresentante del blocco in cui è inserito.
+
+\paragraph{Vincoli.} I vincoli \eqref{assign} assicurano che ogni elemento sia inserito in un blocco. I vincoli \eqref{open} assicurano che un elemento possa essere inserito in un blocco il cui rappresentante è $j$ solo se $j$ è identificato come un rappresentante. I vincoli \eqref{compactF} assicurano che se ci sono tre elementi $i$, $k$ e $j$ che compaiono uno dopo l'altro in ordine, e $i$ è assegnato a $j$, allora anche $k$ è assegnato a $j$. Simmetricamente, i vincoli \eqref{comactB} assicurano che se ci sono tre elementi $j$, $k$ e $i$ che compaiono uno dopo l'altro in ordine, e $i$ è assegnato a $j$, allora anche $k$ è assegnato a $j$.

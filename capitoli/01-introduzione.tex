@@ -1,7 +1,7 @@
 \chapter{Introduzione}
 \label{cap:introduzione}
 
-\dots
+Negli ultimi anni le reti di comunicazione hanno subito una rapida evoluzione, abbracciando la virtualizzazione dei sistemi come metodologia per ottimizzare l'efficienza delle risorse fisiche e le spese necessarie per gestire la rete, oltre che aumentare la qualità dell'esperienza per l'utente finale. Un'area di ricerca particolarmente promettente è quella riguardante il Mobile Edge Computing (MEC), che propone una versione distribuita del classico cloud computing, in cui i server applicativi sono istallati nell'edge della rete tramite un sistema di virtualizzazione, in modo da diminuire la distanza di rete tra gli utenti e i server, ed offrire quindi maggiore affidabilità e migliori prestazioni alle connessioni di rete, oltre che a ridurre la quantità di energia necessaria a gestire l'intera infrastruttura. Questo tipo di architettura migliora il servizio offerto all'utente riducendo drasticamente la latenza di connessione ai server e virtualizzando le operazioni di calcolo sul nodo più vicino, permettendo di avere un basso impatto energetico sui dispositivi mobili e quindi poter eseguire applicazioni computazionalmente pesanti utilizzando device a basso consumo. Diversi scenari applicativi traggono vantaggio dall'utilizzo dell'infrastruttura MEC, come la realtà aumentata o i veicoli a guida autonoma, o più in generale tutti quelli in cui sia necessaria elevata potenza di computazione e bassa latenza.
 
 
 %
@@ -10,7 +10,7 @@
 \section{Obbiettivi}
 \label{sec:obbiettivi}
 
-\dots
+Si consideri una rete MEC formata da cluster di virtualizzazione dotati di capacità limitata ed un insieme di acces point (AP) sottoposti a traffico variabile nel tempo. Questo lavoro propone un modello di orchestrazione che assegni dinamicamente il traffico di ogni AP ad un nodo della rete, con l'obbiettivo di fornire un'alta qualità del servizio pur cercando di contenere i costi relativi alla gestione e minimizzando la quantità di energia utilizzata. Tale modello viene implementato utilizzando due diversi approcci euristici, che verranno approfondidi, analizzati e confrontati nel corso dei capitoli.
 
 
 %
@@ -19,4 +19,13 @@
 \section{Struttura dell'elaborato}
 \label{sec:organizzazione-elaborato}
 
-\dots
+Il documento è diviso in sei capitoli:
+\begin{itemize}
+    \item[\textbf{1.}] \textbf{\nameref{cap:introduzione}}: introduzione al lavoro svolto;
+    \item[\textbf{2.}] \textbf{\nameref{cap:modellazione-sistema}}: fornisce una panoramica riguardo l'infrastruttura Mobile Edge Computing e illustra il funzionamento del modello di orchestrazione proposto;
+    \item[\textbf{3.}] \textbf{\nameref{cap:modelli-ottimizzazione}}: definisce i modelli di ottimizzazione utilizzati dagli algoritmi euristici, mostrando la loro rappresentazione matematica e descrivendo nel dettaglio le variabili, i vincoli e l'obbiettivo da raggiungere;
+    \item[\textbf{4.}] \textbf{\nameref{cap:algoritmi-euristici}}: illustra i due algoritmi euristici proposti, mostrando il loro pseudocodice e descrivendo le operazioni che svolgono;
+    \item[\textbf{5.}] \textbf{\nameref{cap:analisi-sperimentale}}: inizialmente presenta il setup e i dati utilizzati, successivamente descrive i test e mostra i risultati ottenuti;
+    \item[\textbf{6.}] \textbf{\nameref{cap:conclusioni}}: descrive dettagliatamente le conclusioni più rilevanti ottenute nella parte precedente.
+\end{itemize}
+Dopo l'ultimo capitolo, è presente l'appendice \textbf{\nameref{cap:modelli-di-ottimizzazione-framm}}, in cui sono presentati due modelli di ottimizzazione che propongono due diverse metodologie per frammentare un array in blocchi.

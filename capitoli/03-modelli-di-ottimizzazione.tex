@@ -69,7 +69,7 @@ I vincoli \ref{eq:migrinf-c1} determinano il valore delle variabili $v^t_k$: l'e
 \subsection{Variante con quadro energetico completo}
 \label{subsec:modello-statico-var}
 
-Da notare come questo modello non garantisca di tracciare il reale flusso di energia che avviene all'interno delle facility, dato che per come sono posti i vincoli \ref{eq:migrinf-c3} e \ref{eq:migrinf-c4} ci potrebbero essere delle quantità di energia residua che non vengono accumulate in quanto non utilizzate nei time-slot successivi. Nel determinare la soluzione ottima questo non causa problemi, ma nei casi in cui si necessita di un quadro realistico della gestione energetica, è necessario apportare alcune modifiche. In particolare, si deve immagazzinare ogni volta tutta l'energia possibile, quindi i vincoli \ref{eq:migrinf-c3} e \ref{eq:migrinf-c4} vengono rispettivamente riformulati come:
+Il modello presentato non garantisce di tracciare il reale flusso di energia che avviene all'interno delle facility, dato che per come sono posti i vincoli \ref{eq:migrinf-c3} e \ref{eq:migrinf-c4} ci potrebbero essere delle quantità di energia residua che non vengono accumulate in quanto non utilizzate nei time-slot successivi. Nel determinare la soluzione ottima questo non causa problemi, ma quando si necessita di un quadro realistico della gestione energetica è necessario apportare alcune modifiche. In particolare, si deve immagazzinare ogni volta tutta l'energia possibile, quindi i vincoli \ref{eq:migrinf-c3} e \ref{eq:migrinf-c4} vengono rispettivamente riformulati come:
 \begin{align}
     \label{eq:statico-c3var}
     & z_k^1 + e_k^1 + p_k = v_k^1 + g_k^1 + s_k^1       &   & \forall k \in K                                  \\
@@ -83,12 +83,10 @@ dove $s^t_k$ sono variabili non negative che indicano la quantità di energia no
     \min\quad       & \beta \sum_{t \in T} \sum_{i \in A} \sum_{k \in K}{d^t_i m_{ik} x_{ik}} + \gamma \sum_{t \in T} \sum_{k \in K}{c_k^t z_k^t} + \sum_{t \in T} \sum_{k \in K}{s_k^t}
 \end{align}
 \noindent
-in modo tale da avere nelle variabili $g$ il valore più alto possibile, e quindi immagazzinare ogni volta tutta la quantità possibile.
-
+in modo da ottenere nelle variabili $g$ il valore più alto possibile, e quindi immagazzinare ogni volta tutta la quantità possibile.\\
 Di seguito la rappresentazione matematica completa:
 
 \input{modelli/modello-statico-energia-tracciata.tex}
-
 Da notare come l'aggiunta delle variabili $s$ renda questo modello leggermente più complesso rispetto a quello di riferimento, e che nel risolvere le stesse istanze si otterranno risultati della stessa qualità.
 
 

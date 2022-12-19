@@ -1,72 +1,73 @@
 \chapter{Algoritmi euristici}
 \label{cap:algoritmi-euristici}
 
-Nel corso del capitolo vengono presentati i due algoritmi euristici proposti in questo lavoro.
+Nel corso del capitolo vengono presentati i due algoritmi risolutivi euristici proposti in questo lavoro.
+
 
 %
-%   SEMPLIFICAZIONE MODELLO
+%   EURISTICA 1: SEMPLIFICAZIONE MODELLO
 %
 \section{Euristica 1: Semplificazione del modello}
 \label{sec:semplificazione-modello}
 
-Il primo algoritmo euristico proposto tenta di abbassare la complessità del problema andando a semplificare il modello di ottimizzazione utilizzato. In particolare, l'idea è quella di effettuare le orchestrazioni solo in determinati time-slot prestabiliti, così da poter suddividere l'istanza considerata in sottoistanze, all'interno delle quali ogni AP rimane associato alla stessa facility per tutto l'arco temporale e poter risolvere ciascuna indipendentemente in modo statico: i risultati ottenuti verranno poi uniti per formare quello dell'istanza iniziale. Le migrazioni possono quindi essere effettuate solo tra l'ultimo time-slot di una sottoistanza ed il primo della successiva, ed essendo una conseguenza dell'aggregazione dei risultati parziali, vengono effettuate senza considerare i costi di migrazione, ciò significa che gli assegnamenti premiano la latenza e l'utilizzo dell'energia a discapito dei costi di gestione della rete che andranno pagati. Idealmente, per avere un buon trade-off di ottimizzazione, l'istanza inziale non deve essere suddivisa in troppe parti, e di conseguenza è ragionevole voler pagare poche volte grossi costi di migrazione, pur di avere nel lungo periodo una migliore latenza e gestione dell'energia.
+Il primo algoritmo euristico tenta di abbassare la complessità del problema andando a semplificare il modello di ottimizzazione utilizzato. In particolare, l'idea è quella di effettuare le orchestrazioni solo in determinati time-slot prestabiliti, così da poter suddividere l'istanza considerata in sottoistanze, all'interno delle quali ogni AP rimane associato alla stessa facility per tutto l'arco temporale, e poter risolvere ciascuna indipendentemente in modo statico usando solutori generici. I risultati ottenuti verranno poi ri-aggregati per formare quello dell'istanza iniziale. Nel risultato ottenuto, le orchestrazioni vengono quindi effettuate solo in fascie consecutive appartenenti a sottoistanze diverse, ed essendo una conseguenza dell'aggregazione dei risultati parziali, non considerano i costi di migrazione. Ciò significa che verrà premiata la latenza e la gestione energetica, ma andando a pagare un costo di gestione della rete maggiore a quello previsto dalla soluzione ottima. Idealmente, per avere un buon trade-off di ottimizzazione, l'istanza inziale non deve essere suddivisa in troppe parti, e di conseguenza è ragionevole voler pagare poche volte alti costi di migrazione, pur di avere nel lungo periodo una migliore latenza e gestione dell'energia.
 
 
 \subsection{Descrizione dell'algoritmo}
-\label{subsec:algo-model}
+\label{subsec:algoritmo-sempl-modello}
 
 \input{algoritmi/algoritmo-euristica-semplificazione-modello.tex}
 
-L'\autoref{alg:euristica-sempl} mostra le operazioni necessarie ad implementare l'idea euristica esposta. Come si può osservare, richiede in input un'istanza del problema e ritorna in output il piano degli assegnamenti, rappresentato delle variabili $x^t_{ik}$, che assumono valore 1 se al tempo $t \in T$ l'AP $i \in A$ è assegnato alla facility $k \in K$, altrimenti 0; dove $T$ è l'insieme dei time-slot che compongono l'istanza, mentre $A$ e $K$ gli insiemi degli AP e delle facility dell'infrastruttura MEC.
+L'\autoref{alg:euristica-semplificazione-modello} mostra le operazioni necessarie ad implementare l'idea euristica esposta. Come si può osservare, richiede in input un'istanza del problema e ritorna in output il piano degli assegnamenti, rappresentato delle variabili $x^t_{ik}$, che assumono valore 1 se al tempo $t \in T$ l'AP $i \in A$ è assegnato alla facility $k \in K$, altrimenti 0; dove $T$ è l'insieme dei time-slot che compongono l'istanza, mentre $A$ e $K$ gli insiemi degli AP e delle facility dell'infrastruttura MEC.
 
-Per fornire una migliore leggibilità, i nomi dei dati e delle variabili rispecchino quelli utilizzati nei modelli di assegnamento descritti nel capitolo precedente (\hyperref[cap:modelli-ottimizzazione]{capitolo 3}). Da notare come i dati dell'istanza globale siano rappresentati con una barra (es. $d$) e quelli della singola sottoistanza senza (es. $\bar{d}$), mentre le variabili riguardanti il risultato globale con un cappello (es. $x$) e quelle delle sottoistanze senza (es. $\hat{x}$).
+Per fornire una migliore leggibilità, i nomi dei dati e delle variabili rispecchino quelli utilizzati nei modelli di assegnamento descritti nel capitolo precedente. Da notare come i dati delle sottoistanze siano rappresentati con una barra (es. $\bar{d}$) e quelli dell'istanza globale senza (es. $d$), e allo stesso modo, le variabili delle sottoistanze con un cappello (es. $\hat{x}$) e quelle del risultato globale senza (es. $x$).
 
-Successivamente vengono illustrate le operazioni effettuate dall'algoritmo raggruppandole in tre parti: frammentazione dell'istanza, ottimizzazione delle sottoistanze e composizione del risultato generale.
+Successivamente vengono illustrate le operazioni effettuate dall'algoritmo raggruppandole in tre parti: frammentazione dell'istanza, ottimizzazione delle sottoistanze e composizione del risultato globale.
 
 \subsubsection{Frammentazione dell'istanza}
 
-La prima operazione effettuata dall'algoritmo consiste nel frammentare l'istanza in input utilizzando la funzione \textit{split} (linea X), che restituisce una lista composta dalle sottoistanze ottenute. La frammentazione si effettua andando a identificare alcuni time-slot chiamati `split point' e generando un'istanza per ogni sequenza compresa tra ogni coppia, mentenendo il loro ordine originale. Le sottoistanze generate sono tra loro indipendenti e operano sulla stessa infrastruttura MEC di partenza.
+La prima operazione effettuata dall'algoritmo consiste nel frammentare l'istanza in input utilizzando la funzione \textit{split} (riga 4), che restituisce una lista composta dalle sottoistanze ottenute. La frammentazione si effettua andando a identificare alcuni time-slot chiamati `split point' e generando un'istanza per ogni sequenza compresa tra ciascuna coppia, mentenendo il loro ordine originale. Le sottoistanze generate sono tra loro indipendenti e operano sulla stessa infrastruttura MEC di partenza.
 
 \subsubsection{Ottimizzazione delle sottoistanze}
 
-Successivamente si vanno a risolvere una per una tutte le sottoistanze utilizzando la funzione \textit{calcola\_assegnamenti} (riga X), che implementa la variante con quadro energetico completo del modello di assegnamento statico, descritto nella \autoref{subsec:modello-statico-var}. Per poter riprodurre il corretto flusso di energia tra istanti temporali consecutivi ma appartenenti a sottoistanze diverse, è necessario effettuare l'esecuzione mantenendo il corretto ordine cronologico, così da poter inserire nelle batterie delle facility al primo time-slot di ogni sottoistanza la quantità di energia che era stata immagazzinata nell'ultimo istante di quella precedente. Questo comportamento è descritto nelle righe X:Y, dove con $p_k$ viene indicata tale quantità, e all'inizio della prima sottoistanza le batterie vengono considerate vuote. Da notare come utilizzando il modello di assegnamento statico (invece che la sua variante) non sarebbe stato possibile determinare la reale quantità di energia immagazzinabile nell'ultimo istante temporale di ogni sottoistanza.
+Successivamente si vanno a risolvere una per una tutte le sottoistanze utilizzando la funzione \textit{calcola\_assegnamenti} (riga 13), che implementa la variante con quadro energetico completo del modello di assegnamento statico, descritto nella \autoref{subsec:modello-statico-var}. Per poter riprodurre il corretto flusso di energia tra istanti temporali consecutivi ma appartenenti a sottoistanze diverse, è necessario effettuare l'esecuzione mantenendo il corretto ordine cronologico, così da poter inserire nelle batterie delle facility al primo time-slot di ogni sottoistanza, la quantità di energia che era stata immagazzinata nell'ultimo istante di quella precedente. Questo comportamento è descritto nelle righe 8:12, dove con $p_k$ viene indicata tale quantità, e all'inizio della prima sottoistanza le batterie vengono considerate vuote. Da notare come utilizzando il modello di assegnamento statico (invece che la sua variante) non sarebbe stato possibile determinare la reale quantità di energia immagazzinabile nell'ultimo istante temporale di ogni sottoistanza.
 
 \subsubsection{Composizione del risultato globale}
 
-Avendo risolto le sottoistanze seguendo l'ordine temporale, le variabili della soluzione globale si ottengono andando ad accumulare di volta in volta quelle parziali, come è mostrato nella righe X:Y.
+Avendo risolto le sottoistanze seguendo l'ordine temporale, le variabili della soluzione globale si ottengono andando ad accumulare di volta in volta quelle parziali, come è mostrato nella righe 23:27.
 
-Per determinare la validità delle soluzioni ottenute, devono poter essere confrontabili con quelle ottime, e quindi è necessario calcolare il valore della funzione obbiettivo del modello di assegnamento dinamico (\autoref{eq:complete-obj}) utilizzando le variabili della soluzione globale. Le variabili $y$, a differenze delle altre necessarie, non sono però disponibili, quindi i costi di migrazione complessivi vengono calcolati iterativamente dall'algoritmo e memorizzati nella variabile \textit{costi\_migrazione}. Il valore cercato sarà quindi dato da:
+Per determinare la validità delle soluzioni ottenute, devono poter essere confrontabili con quelle ottime, e quindi è necessario calcolare il valore della funzione obbiettivo del modello di assegnamento dinamico (\hyperref[eq:dinamico-obj]{equazione 3.1.1}) utilizzando le variabili della soluzione globale. Le variabili $y$, a differenze delle altre necessarie, non sono però disponibili, quindi i costi di migrazione complessivi vengono calcolati iterativamente dall'algoritmo e memorizzati nella variabile \textit{costi\_migrazione}. Il valore cercato sarà quindi dato da:
 \begin{equation}
     \alpha \cdot \operatorname{costi\_migrazione} ~ + ~ \beta \sum_{t \in T} \sum_{i \in A} \sum_{k \in K}d^{t}_{i} m_{ik} x^t_{ik} ~ + ~ \gamma \sum_{t \in T} \sum_{k \in K}{c_k^t z_k^t}.
 \end{equation}
-Effettuando gli switch solo tra due sottoistanze adiacenti, i costi di migrazione vengono calcolati controllando per ogni AP se la facility a cui è associato nell'ultimo time-slot della sottoistanza precedente ($k_{\text{prec}}$) sia diversa da quella del primo time-slot della sottoistanza successiva ($k_{\text{succ}}$): in questo caso il costo da pagare è dato dalla quantità di traffico da migrare per la distanza tra le due facility coinvolte, ossia $k_{\text{prec}}$ e $k_{\text{succ}}$ (righe X:Y).
+Effettuando gli switch solo tra due sottoistanze adiacenti, i costi di migrazione vengono calcolati controllando per ogni AP, se la facility a cui è associato nell'ultimo time-slot della sottoistanza precedente ($k_{\text{prec}}$) sia diversa da quella del primo time-slot della sottoistanza successiva ($k_{\text{succ}}$): in questo caso il costo da pagare è dato dalla quantità di traffico da migrare per la distanza tra le due facility coinvolte, ossia $k_{\text{prec}}$ e $k_{\text{succ}}$ (righe 15:21).
 
 
 %
-%   AGGREGAMENTO TIME-SLOTS
+%   EURISTICA 2: AGGREGAMENTO TIME-SLOTS
 %
-\section{Euristica 2: Aggregamento dei time-slot}
+\section{Euristica 2: Aggregazione dei time-slot}
 \label{sec:aggregamento-time-slot}
 
-L'euristica proposta in questa sezione mira ad abbassare la complessità del problema semplificando l'istanza da risolvere. In particolare, l'idea è quella di frammentare l'arco temporale considerato e rappresentare ciascun frammento attraverso un time-slot chiamato `rappresentante', dato dall'aggregazione di tutti gli istanti appartenenti alla stessa parte. In questo modo si ottiene un'istanza composta solo dai rappresentanti, ed avendo quindi un numero inferiore di istanti temporali, diventa più veloce da risolvere. In ogni time-slot dell'istanza originale, vengono quindi eseguiti gli stessi assegnamenti del suo rappresentante, e di conseguenza le migrazioni verranno effettuate solo tra frammenti consecutivi e, a differenza dell'euristica precedente, nell'ottimizzazione vengono considerati i costi di migrazione, anche se non utilizzado i valori dei dati reali ma quelli dei rappresentanti. Da notare come in alcune situazioni, questa euristica genera un risultato globale non valido, in quanto gli assegnamenti da attuare in ogni frammento sono calcolati utilizzando esclusivamente il traffico dell'istante rappresentante, che può essere diverso negli altri time-slot, e di conseguenza si potrebbe assegnare ad una facility più domanda di quanta ne possa gestire.
+L'euristica proposta in questa sezione mira ad abbassare la complessità del problema semplificando l'istanza da risolvere. In particolare, l'idea è quella di frammentare l'arco temporale considerato e rappresentare ciascun frammento attraverso un singolo time-slot chiamato `rappresentante', dato dall'aggregazione di tutti gli istanti appartenenti alla stessa parte. In questo modo si ottiene un'istanza composta solo dai rappresentanti, ed avendo quindi un numero inferiore di istanti temporali, diventa più veloce da risolvere. In ogni fascia dell'istanza originale, vengono quindi eseguiti gli stessi assegnamenti del suo rappresentante, e di conseguenza le migrazioni verranno effettuate solo tra frammenti consecutivi. A differenza dell'euristica precedente, nell'ottimizzazione vengono considerati i costi di migrazione, anche se non saranno utilizzati i valori dei dati reali ma quelli dei rappresentanti. Da notare come in alcune situazioni venga generato un risultato globale non valido, in quanto gli assegnamenti da attuare in ogni frammento sono calcolati utilizzando esclusivamente il traffico dell'istante rappresentante, che in genere è diverso negli altri time-slot, e di conseguenza si potrebbe assegnare ad una facility più domanda di quanta è in grado di gestirne.
+
 
 \subsection{Descrizione dell'algoritmo}
-\label{subsec:algo2}
+\label{subsec:algoritmo-aggregazione}
 
 \input{algoritmi/algoritmo-euristica-semplificazione-istanza.tex}
 
-L'implementazione di questa euristica viene mostrata nell'\autoref{alg:euristica-modello}. Tale algoritmo richiede in input un'istanza del problema e ritorna il piano degli assegnamenti, dato dal valore delle variabili binarie $x^t_{ik}$, che assumono valore 1 solo se al tempo $t \in T$ l'AP $i \in A$ è associato alla facility $k \in K$, dove $T$ è l'insieme del time-slot mentre $A$ e $K$ quelli degli AP e delle facility. I dati e le variabili vengono denominati seguendo la convenzione adotatta nell'algoritmo precedente (consultare la \autoref{subsec:algo-model} per una panoramica completa).\\
-Successivamente viene illustrato il funzionamento dell'algoritmo.
+L'implementazione di questa euristica viene mostrata nell'\autoref{alg:euristica-semplificazione-istanza}. Tale algoritmo, richiede in input un'istanza del problema e ritorna il piano degli assegnamenti, dato dal valore delle variabili binarie $x^t_{ik}$, che assumono valore 1 solo se al tempo $t \in T$ l'AP $i \in A$ è associato alla facility $k \in K$, dove $T$ è l'insieme del time-slot mentre $A$ e $K$ quelli degli AP e delle facility. I dati e le variabili vengono indicati seguendo la convenzione adotatta nell'algoritmo precedente (consultare la \autoref{subsec:algoritmo-sempl-modello} per una panoramica completa). Successivamente viene illustrato il funzionamento dell'algoritmo.
 
 \subsubsection{Semplificazione e ottimizzazione dell'istanza}
 
-La prima operazione eseguita dall'algoritmo consiste nel semplificare l'istanza in input attraverso la funzione \textit{aggrega} (riga X), che oltre al risultato atteso fornisce un array $L$: l'elemento $L[j]$ indica il numero di time-slot rappresentati dal $j$-esimo istante dell'istanza semplificata. Successivamente si determina il piano degli assegnamenti su tale istanza utilizzando il modello di ottimizzazione dinamico (\autoref{sec:modello-completo}), implementato dalla funzione \textit{aggrega}. In questo caso il valore risultante delle variabili $\hat{g}$, $\hat{v}$ e $\hat{z}$ è superfluo.
+La prima operazione eseguita dall'algoritmo consiste nel semplificare l'istanza in input attraverso la funzione \textit{aggrega} (riga 4), che oltre al risultato atteso fornisce un array $L$: l'elemento $L[j]$ indica il numero di time-slot rappresentati dal $j$-esimo istante dell'istanza semplificata. Successivamente si determina il piano degli assegnamenti su tale istanza utilizzando il modello di ottimizzazione dinamico (\autoref{sec:modello-dinamico}), implementato dalla funzione \textit{calcola\_assegnamenti}. In questo caso il valore risultante delle variabili $\hat{g}$, $\hat{v}$ e $\hat{z}$ è superfluo.
 
 \subsubsection{Composizione del risultato globale}
 
-Il piano degli assegnamenti globale viene generato effettuando l'operazione inversa all'aggregamento sulle variabili $x$: tutti i time-slot di ogni frammento effettuano gli stessi assegnamenti determinati dal proprio rappresentante (righe X:Y).
+Il piano degli assegnamenti globale viene generato effettuando l'operazione inversa all'aggregazione sulle variabili $x$: tutti i time-slot di ogni frammento effettuano gli stessi assegnamenti determinati dal proprio rappresentante (riga 8, $t$ rappresenta lo slot-time del risultato globale considerato attualmente).
 
-Anche in questo caso si vuole poter confrontare le soluzioni ottenute con quelle ottime, e di conseguenza è necessario calcolare il valore della funzione obbiettivo (\autoref{eq:complete-obj}) utilizzando le variabili del risultato complessivo. A questo scopo, bisogna conoscere la quantità di energia acquistata da ogni facility in ogni istante, e per ottenere tali valori è necessario simulare l'intero scenario energetico (righe X:Y) considerando gli assegnamenti dettati dal piano globale. Dato un time-slot $t \in T$ e una facility $k \in K$, come prima cosa va calcolata la quantità di energia necessaria a gestire la domanda a cui è sottoposta $k$ al tempo $t$, indicata con $v^t_k$ e data dalla quantità totale di traffico rivolto agli AP che le sono assegnati:
+Anche in questo caso, si vuole poter confrontare le soluzioni ottenute con quelle ottime, e di conseguenza è necessario calcolare il valore della funzione obbiettivo (\hyperref[eq:dinamico-obj]{equazione 3.1.1}) utilizzando le variabili del risultato complessivo. A questo scopo, bisogna conoscere la quantità di energia acquistata da ogni facility in ogni istante, e per ottenere tali valori è necessario simulare l'intero scenario energetico (righe 14:16) considerando gli assegnamenti dettati dal piano globale. Dato un time-slot $t \in T$ e una facility $k \in K$, come prima cosa va calcolata la quantità di energia necessaria a gestire la domanda a cui è sottoposta $k$ al tempo $t$, indicata con $v^t_k$ e data dalla quantità totale di traffico rivolto agli AP che le sono assegnati:
 \begin{equation}
     v^t_k = \sum_{i \in A} d^t_i x^t_{ik}.
 \end{equation}
@@ -74,13 +75,11 @@ Successivamente bisgona determinare quanta energia viene accumulata, indicata co
 \begin{equation}
     g^t_k = p_k + e^t_k- v^t_k
 \end{equation}
-da notare come questo valore non possa essere negativo e non debba poter superare la capienza della batteria ($\bar{G}_k$). Con $p_k$ viene indicata la quantità di energia disponibile all'interno delle batterie all'inizio dell'istante temporale.\\
-Infine si arriva a calcolare l'energia acquistata, data dalla differenza tra la quantità utilizzata e la quantità disponibile:
+da notare come questo valore non possa essere negativo e non debba poter superare la capienza della batteria ($G_k$). Con $p_k$ viene indicata la quantità di energia disponibile all'interno delle batterie all'inizio dell'istante temporale. Infine, si arriva a calcolare l'energia acquistata, data dalla differenza tra la quantità utilizzata e la quantità disponibile:
 \begin{equation}
     z^t_k = v^t_k - \left(p_k + e^t_k\right)
 \end{equation}
-anche questo valore deve essere posto a non negativo, in modo da poter gestire correttamente i casi in cui la disponibilità sia maggiore dell'utilizzo. Da notare come nello scenario generato l'energia acquistata deve essere direttamente utilizzata, senza poterla accumulare, e di conseguenza tale scenario è ottimizzato solo nel caso in cui il costo dell'energia in ogni facility sia fisso nel tempo.\\
-A questo punto è possible calcolare il valore della funzione obbiettivo:
+anche questo valore deve essere posto a non negativo, in modo da poter gestire correttamente i casi in cui la disponibilità sia maggiore dell'utilizzo. Da notare come nello scenario generato, l'energia acquistata debba essere direttamente utilizzata nell'istante attuale, senza poterla accumulare, e di conseguenza il risultato ottenuto potrebbe non rappresentare quello reale nei casi in cui il costo dell'energia nelle facility non sia costante nel tempo. A questo punto è possible calcolare il valore della funzione obbiettivo:
 \begin{equation}
     \alpha \cdot \operatorname{costi\_migrazione} ~ + ~ \beta \sum_{t \in T}\sum_{i \in A}\sum_{k \in K} d^t_i m_{ik} x^t_{ik} ~ + ~ \gamma \sum_{t \in T} \sum_{k \in K} c^t_k z^t_k
 \end{equation}

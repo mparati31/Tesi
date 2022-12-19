@@ -1,24 +1,24 @@
 \begin{algorithm}
     \caption{Pseudocodice euristica 1}
-    \label{alg:euristica-sempl}
+    \label{alg:euristica-semplificazione-modello}
     \begin{algorithmic}[1]
-        \Require l'istanza da risolvere, composta dagli insiemi $T$, $A$, $K$ e dati $C$, $G$, $d$, $l$, $m$, $e$, $c$
+        \Require l'istanza da risolvere, composta dagli insiemi $T$, $A$, $K$ e i dati $C$, $G$, $d$, $l$, $m$, $e$, $c$
         \Ensure il piano degli assegnamenti risultante, quindi il valore delle variabili $x$
         \State Siano $x, g, v, z, s$ le variabili del risultato globale
         \State $t \gets -1$
         \State $\operatorname{costo\_migrazione} \gets 0$
-        \State $S \gets \operatorname{split}(T, A, K, C, G, d, l, m, e, c)$ \label{algo:l:split}
+        \State $S \gets \operatorname{split}(T, A, K, C, G, d, l, m, e, c)$
         \For{$\textbf{all} ~ j \in \{0, \dots, |S|-1\}$}
             \State \{Siano $j$ considerati in ordine crescente\}
-            \State $(\bar{T}$, $\bar{A}$, $\bar{K}, \bar{C}, \bar{G}, \bar{d}, \bar{l}, \bar{m}, \bar{e}, \bar{c}) \gets S[j]$ \label{algo:l:dati1}
-            \If{$j = 0$} \label{algo:l:p1}
+            \State $(\bar{T}$, $\bar{A}$, $\bar{K}, \bar{C}, \bar{G}, \bar{d}, \bar{l}, \bar{m}, \bar{e}, \bar{c}) \gets S[j]$
+            \If{$j = 0$}
                 \State $p_k \gets 0 ~ \forall k \in K$
             \Else
                 \State $p_k \gets g^t_k ~ \forall k \in K$
             \EndIf
-            \State $(\hat{x}, \hat{g}, \hat{v}, \hat{z}, \hat{s}) \gets \operatorname{calcola\_assegnamenti}(\bar{T}$, $\bar{A}$, $\bar{K}, \bar{C}, \bar{G}, \bar{d}, \bar{l}, \bar{m}, \bar{e}, \bar{c})$ \label{algo:l:calcola-ass}
+            \State $(\hat{x}, \hat{g}, \hat{v}, \hat{z}, \hat{s}) \gets \operatorname{calcola\_assegnamenti}(\bar{T}$, $\bar{A}$, $\bar{K}, \bar{C}, \bar{G}, \bar{d}, \bar{l}, \bar{m}, \bar{e}, \bar{c})$
             \If{$j > 0$}
-                \For{$\textbf{all} ~ i \in A$} \label{algo:l:costi-migr1}
+                \For{$\textbf{all} ~ i \in A$}
                 \State $k_{\operatorname{prec}} \gets \underset{k \in K}{\arg\max} ~ x^t_{ik}$
                 \State $k_{\operatorname{succ}} \gets \underset{k \in K}{\arg\max} ~ \hat{x}^0_{ik}$
                     \If{$k_{\operatorname{prec}} \neq k_{\operatorname{succ}}$}
@@ -26,7 +26,7 @@
                     \EndIf
                 \EndFor
             \EndIf
-            \State $x \gets x \cup \hat{x}$ \label{algo:l:acc1}
+            \State $x \gets x \cup \hat{x}$
             \State $g \gets g \cup \hat{g}$
             \State $v \gets v \cup \hat{v}$
             \State $z \gets z \cup \hat{z}$

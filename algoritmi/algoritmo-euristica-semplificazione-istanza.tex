@@ -1,13 +1,13 @@
 \begin{algorithm}
     \caption{Pseudocodice euristica 2}
-    \label{alg:euristica-modello}
+    \label{alg:euristica-semplificazione-istanza}
     \begin{algorithmic}[1]
-        \Require l'istanza da risolvere, composta dagli insiemi $T$, $A$, $K$ e dati $C$, $G$, $d$, $l$, $m$, $e$, $c$
+        \Require l'istanza da risolvere, composta dagli insiemi $T$, $A$, $K$ e i dati $C$, $G$, $d$, $l$, $m$, $e$, $c$
         \Ensure il piano degli assegnamenti risultante, quindi il valore delle variabili $x$
         \State Siano $x, g, v, z$ le variabili del risultato globale
         \State $t \gets 0$
         \State $\operatorname{costi\_migrazione} \gets 0$
-        \State $(L, \bar{T}$, $\bar{A}$, $\bar{K}, \bar{C}, \bar{G}, \bar{d}, \bar{l}, \bar{m}, \bar{e}, \bar{c}) \gets \operatorname{aggrega}(T, A, K, C, G, d, l, m, e, c)$ \label{algo1:l:aggrega}
+        \State $(L, \bar{T}$, $\bar{A}$, $\bar{K}, \bar{C}, \bar{G}, \bar{d}, \bar{l}, \bar{m}, \bar{e}, \bar{c}) \gets \operatorname{aggrega}(T, A, K, C, G, d, l, m, e, c)$
         \State $\hat{x} \gets \operatorname{calcola\_assegnamenti}(\bar{T}$, $\bar{A}$, $\bar{K}, \bar{C}, \bar{G}, \bar{d}, \bar{l}, \bar{m}, \bar{e}, \bar{c})$
         \For{$\textbf{all} ~ j \in \{0, \dots, |L| - 1\}$}
             \For{$\textbf{all} ~ u \in \{0, \dots, L[j] - 1\}$}

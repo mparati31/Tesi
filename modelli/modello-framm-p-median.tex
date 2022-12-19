@@ -1,0 +1,22 @@
+\begin{align}
+    \min\quad       & \sum_{i \in I} \sum_{j \in I} d_{ij} x_{ij}
+    \label{eq:pmedian-obj}
+\end{align}
+\vspace*{-6mm}
+\begin{align}
+    \text{s.t.\quad}
+    \label{eq:pmedian-c1}
+    & \sum_{j \in I} x_{ij} = 1 & & \forall i \in I                                                                    \\
+    \label{eq:pmedian-c2}
+    & x_{ij} \leq y_j           & & \forall i \in I, \forall j \in I                                                   \\
+    \label{eq:pmedian-c3}
+    & \sum_{j \in I} y_j = p    & &                                                                                    \\
+    \label{eq:pmedian-c4}
+    & x_{ij} \leq x_{kj}        & & \forall i \in I, \forall j \in I, \forall k \in I: j > i \wedge k > i \wedge k < j \\
+    \label{eq:pmedian-c5}
+    & x_{ij} \leq x_{kj}        & & \forall i \in I, \forall j \in I, \forall k \in I: j < i \wedge k < i \wedge k > j \\
+    \label{eq:pmedian-c6}
+    & x_{ij} \in \{0,1\}        & & \forall i \in I, \forall j \in I                                                   \\
+    \label{eq:pmedian-c7}
+    & y_j \in \{0,1\}           & & \forall j \in I
+\end{align}

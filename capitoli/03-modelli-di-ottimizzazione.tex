@@ -1,75 +1,75 @@
 \chapter{Modelli di ottimizzazione}
 \label{cap:modelli-ottimizzazione}
 
-In questo capitolo vengono introdotti i modelli di ottimizzazione utilizzati nel corso dell'elaborato. Nel primo sottocapitolo si illustra il modello di assegnamento dinamico rappresentante il problema descritto, mentre nei due successivi quelli utilizzati dagli algoritmi euristici: il modello di assegnamento statico ed il modello che effettua l'assegnamento utilizzando istanze composte da un solo time-slot.
+In questo capitolo vengono introdotti i modelli di ottimizzazione utilizzati nel corso dell'elaborato. Nel primo sottocapitolo si illustra il modello di assegnamento dinamico, che descrive il problema presentato, mentre nei due successivi quelli utilizzati dagli algoritmi euristici: il modello di assegnamento statico ed il modello che effettua l'assegnamento utilizzando istanze composte da un solo time-slot.
 
 
 %
-%   MODELLO COMPLETO
+%   MODELLO DINAMICO
 %
 \section{Modello di assegnamento dinamico}
-\label{sec:modello-completo}
+\label{sec:modello-dinamico}
 
-Il `modello di assegnamento dinamico' è un modello di programmazione lineare misto-intera (MILP) che, considerata un'infrastruttura MEC, è in grado di definire dinamicamente gli assegnamenti AP-facility all'interno di un arco temporale in cui sono noti i livelli di traffico rivolti agli AP e l'energia prodotta dalle facility, per ogni time-slot. Con `dinamicamente' si intende la possibilità di assegnare lo stesso AP a facility differenti nel corso dei time-slot, permettento di bilanciare nel tempo la domanda complessiva rivolta alle facility. Questo migliora la latenza complessiva e la gestione energetica attuata, ma provoca la necessità di dover gestire i vari switch e pagare i costi di migrazione. L'output del modello è un piano degli assegnamenti: viene indicato in ogni time-slot a quale facility della rete deve indirizzare il traffico ogni AP. Di conseguenza è possibile estrarre anche il piano delle orchestrazioni, che corrisponde ad un valore booleano per ogni time-slot, per ogni AP e per ogni coppia di facility, che assume come valore `vero' se in quell'instante temporale l'AP effettua uno switch tra le facility considerate, altrimenti `falso'.
+Il `modello di assegnamento dinamico' è un modello di programmazione lineare misto-intera (MILP) che, considerata un'infrastruttura MEC, è in grado di definire dinamicamente gli assegnamenti AP-facility all'interno di un arco temporale in cui sono noti i livelli di traffico rivolti agli AP e l'energia prodotta dalle facility. Con `dinamicamente' si intende la possibilità di assegnare lo stesso AP a facility differenti nel corso dei time-slot, permettento di bilanciare nel tempo i flussi di traffico da gestire. Questo migliora la latenza complessiva e la gestione energetica attuata, ma provoca la necessità di dover gestire i vari switch e pagare i costi di migrazione. L'output del modello è un piano degli assegnamenti: viene indicato in ogni time-slot a quale facility della rete deve indirizzare il traffico ogni AP. Di conseguenza è possibile estrarre anche il piano delle orchestrazioni, che corrisponde ad un valore booleano per ogni time-slot, per ogni AP e per ogni coppia di facility, che assume come valore \textit{vero} se in quell'instante temporale l'AP effettua uno switch tra le facility considerate, altrimenti \textit{falso}.
 
 \paragraph*{Dati.}
 
-Data un'infrastruttura MEC, siano $A$ l'insieme degli AP e $K$ l'insieme delle facility che la compongono. Si supponga inoltre di avere un orizzonte temporale discretizzato in un insieme di $T$ time-slot. Vengono indicati, per ogni AP $i \in A$, con $d^t_i$ la quantità di traffico a cui $i$ è sottoposto al time-slot $t \in T$ e con $m_{i,k}$ la distanza fisica tra $i$ e la facility $k \in K$. La distanza di rete tra due facility $j, k \in K \times K$ è invece denotata con $l_{jk}$: tale valore è direttamente proporzionale alla loro distanza fisica ed alla latenza di rete, includendo anche il tempo necessario a processare i pacchetti all'interno dei nodi intermedi. Data una facility $k \in K$, siano: $C_k$ la quantità di domanda che riesce a gestire contemporaneamente, $G_k$ la capienza complessiva delle sue batterie, $p_k$ l'energia inizialmente presente all'interno delle batterie, $e^t_k$ l'energia che produce nel time-slot $t \in T$, e $c^t_k$ il prezzo a cui può acquistare l'energia nel time-slot $t \in T$.
+Data un'infrastruttura MEC, siano $A$ l'insieme degli AP e $K$ l'insieme delle facility che la compongono. Si supponga inoltre di avere un orizzonte temporale discretizzato in un insieme $T$ di time-slot. Vengono indicati, per ogni AP $i \in A$, con $d^t_i$ la quantità di traffico a cui $i$ è sottoposto al time-slot $t \in T$, e con $m_{i,k}$ la distanza fisica tra $i$ e la facility $k \in K$. La distanza di rete tra due nodi $j, k \in K \times K$ è invece denotata con $l_{jk}$: tale valore è direttamente proporzionale alla loro distanza fisica ed alla latenza di rete, includendo anche il tempo necessario a processare i pacchetti all'interno dei nodi intermedi. Data una facility $k \in K$, siano: $C_k$ la quantità di domanda che riesce a gestire contemporaneamente, $G_k$ la capienza complessiva delle sue batterie, $p_k$ l'energia inizialmente presente all'interno delle batterie, $e^t_k$ l'energia che produce nel time-slot $t \in T$, e $c^t_k$ il prezzo a cui può acquistare l'energia nel time-slot $t \in T$.
 
 \paragraph*{Variabili.}
 
-Siano $x^t_{ik}$ variabili binarie che assumono valore 1 nel caso in cui al time-slot $t \in T$ l'AP $i \in A$ è assegnato alla facility $k \in K$, altrimenti 0. Le variabili $y^t_{ijk}$ sono anch'esse binarie e valgono 1 se l'AP $i \in A$ viene associato alla facility $j \in K$ al tempo $t - 1$ ed alla facility $k \in K$ al tempo $t$, altrimenti 0. Da notare come queste siano le variabili che indicano le orchestrazioni da effettuare. Per ogni facility $k \in K$ e time-slot $t \in T$, siano: $g^t_k$ l'energia residua della facility $k$ al tempo $t$ (quindi quella che viene immagazzinata all'interno delle batterie e disponibile nel time-slot $t+1$), $v^t_k$ l'energia utilizzata dalla facility $k$ al tempo $t$ e $z^t_k$ la quantità di energia acquistata dalla facility $k$ al tempo $t$.
+Siano $x^t_{ik}$ variabili binarie che assumono valore 1 nel caso in cui al time-slot $t \in T$ l'AP $i \in A$ è assegnato alla facility $k \in K$, altrimenti 0. Le variabili $y^t_{ijk}$ sono anch'esse binarie, e valgono 1 se l'AP $i \in A$ viene associato alla facility $j \in K$ al tempo $t - 1$ ed alla facility $k \in K$ al tempo $t$, altrimenti 0. Da notare come queste variabili indicato le orchestrazioni da effettuare. Per ogni facility $k \in K$ e time-slot $t \in T$, siano: $g^t_k$ l'energia residua della facility $k$ al tempo $t$ (quindi quella che viene immagazzinata all'interno delle batterie e disponibile nel time-slot $t+1$), $v^t_k$ l'energia utilizzata dalla facility $k$ al tempo $t$, e $z^t_k$ la quantità di energia acquistata dalla facility $k$ al tempo $t$.
 
 \paragraph*{Modello.}
 
 Di seguito la rappresentazione matematica del modello.
 
-\input{modelli/modello-completo.tex}
+\input{modelli/modello-dinamico.tex}
 
 \paragraph*{Obbiettivo.}
 
-La funzione obbiettivo (\ref{eq:complete-obj}) ha lo scopo di ottenere la soluzione che possiede il miglior bilanciamento tra avere una buona latenza per l'utente finale ed ottenere costi di migrazione e di acquisto dell'energia contenuti. In particolare, si vuole minimizzare la somma tra (nell'ordine) i costi complessivi di migrazione, la latenza complessiva e il costo globale di acquisto dell'energia, dove i parametri $\alpha$, $\beta$ e $\gamma$ indicano quanto peso dare a ciascun componente.
+La funzione obbiettivo (\ref{eq:dinamico-obj}) ha lo scopo di ottenere la soluzione che possiede il miglior bilanciamento tra ottenere buona latenza per l'utente finale e costi di migrazione e di acquisto dell'energia contenuti. In particolare, si vuole minimizzare la somma tra (nell'ordine) i costi complessivi di migrazione, la latenza complessiva e il costo globale di acquisto dell'energia, dove i parametri $\alpha$, $\beta$ e $\gamma$ indicano quanto peso dare a ciascun componente.
 
 \paragraph*{Vincoli.}
 
-I vincoli \ref{eq:complete-c1} determinano il valore delle variabili $v^t_k$: la domanda a cui è sottoposta la facility $k \in K$ al tempo $t \in T$ è data dalla somma del traffico proveniente da tutti gli AP che le sono assegnati in quel time-slot. I vincoli \ref{eq:complete-c2} impongono ogni AP ad essere assegnato esattamente ad una facility per time-slot. I vincoli \ref{eq:complete-c3} e \ref{eq:complete-c4} collegano le variabili $x$ ed $y$ e servono a gestire il flusso degli switch: quando $x^t_{ik}$ vale 0 significa che l'AP $i \in A$ non è associato alla facility $k \in K$ e di conseguenza non permettono di effettuare nessuna orchestrazione, mentre nel caso contrario impongono di effettuarne esattamente una oppure mantenere l'AP $i$ associato alla facility $k$. I vincoli \ref{eq:complete-c5} e \ref{eq:complete-c6} gestiscono il flusso dell'energia: impongono che per ogni time-slot e per ogni facility la quantità di energia disponibile (data dalla somma tra quella prodotta, quella presente nelle batterie e quella acquistata) sia non minore della somma tra la quantità utilizzata e quella che viene immagazzinata nelle batterie. I vincoli \ref{eq:complete-c7} e \ref{eq:complete-c8} limitano superiormente i valori che possono assumere rispettivamente le variabili $g$ e $v$, facendo in modo che non venga sforata la capienza delle batterie e la capacità delle facility.
+I vincoli \ref{eq:dinamico-c1} determinano il valore delle variabili $v^t_k$: la domanda a cui è sottoposta la facility $k \in K$ al tempo $t \in T$ è data dalla somma del traffico proveniente da tutti gli AP che le sono assegnati in quel time-slot. I vincoli \ref{eq:dinamico-c2} impongono ogni AP ad essere assegnato esattamente ad una facility per time-slot. I vincoli \ref{eq:dinamico-c3} e \ref{eq:dinamico-c4} collegano le variabili $x$ alle $y$, e servono a gestire il flusso degli switch: quando $x^t_{ik}$ vale 0 significa che l'AP $i$ non è associato alla facility $k$ e di conseguenza non permettono di effettuare nessuna orchestrazione, mentre nel caso contrario impongono di effettuarne esattamente una oppure mantenere $i$ associato a $k$. I vincoli \ref{eq:dinamico-c5} e \ref{eq:dinamico-c6} gestiscono il flusso dell'energia: impongono che per ogni time-slot e per ogni facility, la quantità di energia disponibile (data dalla somma tra quella prodotta, quella presente nelle batterie e quella acquistata) sia non minore della somma tra la quantità utilizzata e quella che viene immagazzinata nelle batterie. I vincoli \ref{eq:dinamico-c7} e \ref{eq:dinamico-c8} limitano superiormente i valori che possono assumere rispettivamente le variabili $g$ e $v$, facendo in modo che non venga sforata la capienza delle batterie e la capacità delle facility.
 
 
 %
-%   MODELLO MIGRAZIONI A INF
+%   MODELLO STATICO
 %
 \section{Modello di assegnamento statico}
-\label{sec:modello-migrazioni-inf}
+\label{sec:modello-statico}
 
-Il `modello di assegnamento statico' è un modello di tipo MILP che ha lo stesso scopo del modello di assegnamento dinamico (\ref{sec:modello-completo}) ma con la differenza che non permette di effettuare switch. Ogni AP sarà quindi assegnato alla stessa facility per tutto l'arco temporale preso in considerazione, e non attuando migrazioni il costo di migrazione complessivo sarà 0. In generale, utilizzare un approccio di assegnamento dinamico fornisce minore latenza e migliore efficienza energetica complessive rispetto ad uno statico, in quanto è possibile adattare gli assegnamenti alla variazione del traffico richiesto dai vari AP ed alla quantità di energia prodotta dalle facility. La formulazione del problema statico è però più leggera rispetto alla controparte dinamica, infatti necessita di un numero inferiore di variabili e vincoli, con conseguente diminuzione della complessità combinatoria. L'output del modello in questo caso sarà una lista di assegnamenti validi per tutti i time-slot.
+Il `modello di assegnamento statico' è un modello di tipo MILP che ha lo stesso scopo del modello di assegnamento dinamico (\ref{sec:modello-dinamico}), ma con la differenza che non permette di effettuare switch. Ogni AP sarà quindi assegnato alla stessa facility per tutto l'arco temporale considerato, e non attuando migrazioni, il costo di migrazione complessivo sarà 0. In generale, utilizzare un approccio di assegnamento dinamico fornisce minore latenza e migliore efficienza energetica complessive rispetto ad uno statico, in quanto è possibile adattare gli assegnamenti alla variazione del traffico richiesto dai vari AP ed alla quantità di energia prodotta dalle facility. La formulazione del problema statico richiede però un numero inferiore di variabili e vincoli, con conseguente diminuzione della complessità combinatoria. L'output del modello in questo caso sarà una lista di assegnamenti validi per tutti i time-slot.
 
 \paragraph*{Dati.}
 
-I dati su cui opera sono gli stessi del modello dinamico, si veda la \autoref{sec:modello-completo} per una panoramica completa.
+I dati su cui opera sono gli stessi del modello dinamico, si veda la \autoref{sec:modello-dinamico} per una panoramica completa.
 
 \paragraph*{Variabili.}
 
-Siano $x_{ik}$ variabili binarie che assumono valore 1 se l'AP $i \in A$ viene assegnato alla facility $k \in K$, 0 altrimenti. Per ogni facility $k \in K$ e per ogni time-slot $t \in T$ siano inoltre $g^t_k$ l'energia residua della facility $k$ al tempo $t$, $v^t_k$ l'energia utilizzata dalla facility $k$ al tempo $t$ e $z^t_k$ la quantità di energia acquistata dalla facility $k$ al tempo $t$. Come si può notare, il set di variabili viene notevolmente ridotto rispetto al modello dinamico, in quanto imponendo assegnamenti statici non è più necessario gestire il flusso degli switch e memorizzare gli assegnamenti per ogni time-slot. Le variabili $y$ diventano quindi superflue, e per determinare gli assegnamenti è sufficiente una variabile $x$ per ogni coppia AP-facility.
+Siano $x_{ik}$ variabili binarie che assumono valore 1 se l'AP $i \in A$ viene assegnato alla facility $k \in K$, 0 altrimenti. Per ogni facility $k \in K$ e per ogni time-slot $t \in T$, siano inoltre $g^t_k$ l'energia residua della facility $k$ al tempo $t$, $v^t_k$ l'energia utilizzata dalla facility $k$ al tempo $t$ e $z^t_k$ la quantità di energia acquistata dalla facility $k$ al tempo $t$. Come si può notare, il set di variabili viene notevolmente ridotto rispetto al modello dinamico, in quanto imponendo assegnamenti statici non è più necessario gestire il flusso degli switch e memorizzare gli assegnamenti per ogni time-slot. Le variabili $y$ diventano quindi superflue, e per determinare gli assegnamenti è sufficiente una variabile $x$ per ogni coppia di AP e facility.
 
 \paragraph*{Modello.}
 
 Di seguito la rappresentazione matematica del modello.
 
-\input{modelli/modello-migrazioni-inf.tex}
+\input{modelli/modello-statico.tex}
 
 \paragraph*{Obbiettivo.}
 
-La funzione obbiettivo (\ref{eq:migrinf-obj}) ha lo scopo di determinare la soluzione che rappresenta il miglior compromesso tra ottenere una bassa latenza complessiva e un prezzo totale di acquisto dell'energia contenuto. I parametri $\beta$ e $\gamma$ corrispondono ai pesi da assegnare a ciascuna componente. Da notare come l'unica differenza con la funzione del modello normale (\ref{eq:complete-obj}) sia l'assenza della prima parte, riguardante i costi di migrazione.
+La funzione obbiettivo (\ref{eq:statico-obj}) ha lo scopo di determinare la soluzione che rappresenta il miglior compromesso tra ottenere una bassa latenza complessiva e un prezzo totale di acquisto dell'energia contenuto. I parametri $\beta$ e $\gamma$ corrispondono ai pesi da assegnare a ciascuna componente. Da notare come l'unica differenza con la funzione del modello normale (\ref{eq:dinamico-obj}) sia l'assenza della prima parte, riguardante i costi di migrazione.
 
 \paragraph*{Vincoli.}
 
-I vincoli \ref{eq:migrinf-c1} determinano il valore delle variabili $v^t_k$: l'energia utilizzata dalla facility $k \in K$ al tempo $t \in T$ è data dalla somma del traffico proveniente da ogni AP $i \in A$ che le è assegnato; mentre i vincoli \ref{eq:migrinf-c2} impongono ad ogni AP di essere associato esattamente ad una facility. I vincoli \ref{eq:migrinf-c3} e \ref{eq:migrinf-c4} riguardano la gestione ed il flusso dell'energia e sono equivalenti ai \ref{eq:complete-c5} e \ref{eq:complete-c6} del modello dinamico, mentre quelli rappresentati dalle disequazioni \ref{eq:migrinf-c5} e \ref{eq:migrinf-c6} impongono di non eccedere rispettivamente la capacità delle batterie e la capienza delle facility, e sono l'equivalente dei \ref{eq:migrinf-c7} e \ref{eq:migrinf-c8}.
+I vincoli \ref{eq:statico-c1} determinano il valore delle variabili $v^t_k$: l'energia utilizzata dalla facility $k$ al tempo $t$ è data dalla somma del traffico proveniente da ogni AP $i$ che le è assegnato; mentre i vincoli \ref{eq:statico-c2} impongono ad ogni AP di essere associato esattamente ad una facility. I vincoli \ref{eq:statico-c3} e \ref{eq:statico-c4} riguardano la gestione ed il flusso dell'energia e sono equivalenti ai \ref{eq:dinamico-c5} e \ref{eq:dinamico-c6} del modello dinamico, mentre quelli rappresentati dalle disequazioni \ref{eq:statico-c5} e \ref{eq:statico-c6} impongono di non eccedere rispettivamente la capacità delle batterie e la capienza delle facility, e sono l'equivalente dei \ref{eq:dinamico-c7} e \ref{eq:dinamico-c8}.
 
 
 \subsection{Variante con quadro energetico completo}
 \label{subsec:modello-statico-var}
 
-Il modello presentato non garantisce di tracciare il reale flusso di energia che avviene all'interno delle facility, dato che per come sono posti i vincoli \ref{eq:migrinf-c3} e \ref{eq:migrinf-c4} ci potrebbero essere delle quantità di energia residua che non vengono accumulate in quanto non utilizzate nei time-slot successivi. Nel determinare la soluzione ottima questo non causa problemi, ma quando si necessita di un quadro realistico della gestione energetica è necessario apportare alcune modifiche. In particolare, si deve immagazzinare ogni volta tutta l'energia possibile, quindi i vincoli \ref{eq:migrinf-c3} e \ref{eq:migrinf-c4} vengono rispettivamente riformulati come:
+Il modello presentato non garantisce di tracciare il reale flusso di energia che avviene all'interno delle facility, dato che per come sono posti i vincoli \ref{eq:statico-c3} e \ref{eq:statico-c4} ci potrebbero essere delle quantità di energia residua che non vengono accumulate, in quanto non utilizzate nei time-slot successivi. Nel determinare la soluzione ottima questo non causa problemi, ma quando si necessita di un quadro realistico della gestione energetica è necessario apportare alcune modifiche. In particolare, si deve immagazzinare ogni volta tutta l'energia possibile, e quindi i vincoli \ref{eq:statico-c3} e \ref{eq:statico-c4} vanno rispettivamente riformulati come:
 \begin{align}
     \label{eq:statico-c3var}
     & z_k^1 + e_k^1 + p_k = v_k^1 + g_k^1 + s_k^1       &   & \forall k \in K                                  \\
@@ -77,14 +77,13 @@ Il modello presentato non garantisce di tracciare il reale flusso di energia che
     & z_k^t + e_k^t + g_k^{t-1} = v_k^t + g_k^t + s_k^t &   & \forall k \in K, \forall t \in T \setminus \{1\}
 \end{align}
 \noindent
-dove $s^t_k$ sono variabili non negative che indicano la quantità di energia non accumulabile nella facility $k \in K$ al tempo $t \in T$ a causa della capienza limitata delle batterie. La quantità di energia disponibile (data dalla somma tra quella acquistata, quella prodotta e quella presente nelle batterie) è posta quindi uguale alla somma tra la quantità utilizzata, la quantità accumulata e la quantità non accumulabile. A questo punto nella funzione obbiettivo (\ref{eq:migrinf-obj}) è necessario minimizzare anche la somma complessiva dell'energia non accumulabile ($\sum_{t \in T}\sum_{k \in K} s^t_k$), trasformandola in:
+dove $s^t_k$ sono variabili non negative che indicano la quantità di energia non accumulabile nella facility $k \in K$ al tempo $t \in T$ a causa della capienza limitata delle batterie. La quantità di energia disponibile (data dalla somma tra quella acquistata, quella prodotta e quella presente nelle batterie) è posta quindi uguale alla somma tra la quantità utilizzata, la quantità accumulata e la quantità non accumulabile. A questo punto, nella funzione obbiettivo (\ref{eq:statico-obj}) è necessario minimizzare anche la somma complessiva dell'energia non accumulabile ($\sum_{t \in T}\sum_{k \in K} s^t_k$), trasformandola in:
 \begin{align}
-    \label{eq:migrinf-objvar}
+    \label{eq:statico-objvar}
     \min\quad       & \beta \sum_{t \in T} \sum_{i \in A} \sum_{k \in K}{d^t_i m_{ik} x_{ik}} + \gamma \sum_{t \in T} \sum_{k \in K}{c_k^t z_k^t} + \sum_{t \in T} \sum_{k \in K}{s_k^t}
 \end{align}
 \noindent
-in modo da ottenere nelle variabili $g$ il valore più alto possibile, e quindi immagazzinare ogni volta tutta la quantità possibile.\\
-Di seguito la rappresentazione matematica completa:
+in modo da ottenere nelle variabili $g$ il valore più alto possibile, e quindi immagazzinare ogni volta tutta la quantità possibile. Di seguito è mostrata la rappresentazione matematica completa:
 
 \input{modelli/modello-statico-energia-tracciata.tex}
 Da notare come l'aggiunta delle variabili $s$ renda questo modello leggermente più complesso rispetto a quello di riferimento, e che nel risolvere le stesse istanze si otterranno risultati della stessa qualità.
@@ -94,9 +93,9 @@ Da notare come l'aggiunta delle variabili $s$ renda questo modello leggermente p
 %   MODELLO SINGOLO SLOT TIME
 %
 \section{Modello di assegnamento singolo time-slot}
-\label{sec:modello-migrazioni-0}
+\label{sec:modello-singolo-slot}
 
-Il `modello di assegnamento singolo time-slot' è un modello di tipo MILP ottimizzato per definire gli assegnamenti all'interno di istanze composte da un singolo time-slot, e fornisce quindi in output la facility a cui deve indirizzare il traffico ogni AP nel time-slot considerato.
+Il `modello di assegnamento singolo time-slot' è un modello di tipo MILP ottimizzato per definire gli assegnamenti all'interno di istanze composte da un singolo time-slot, e fornisce in output la facility a cui deve indirizzare il traffico ogni AP nel time-slot considerato.
 
 \paragraph*{Dati.}
 
@@ -104,16 +103,16 @@ Data un'infrastruttura MEC, siano $A$ l'insieme degli AP e $K$ l'insieme delle f
 
 \paragraph*{Variabili.}
 
-Gli assegnamenti sono rappresentati da variabili binarie $x_{ik}$, che assumono come valore 1 se l'AP $i \in A$ viene assegnagno alla facility $k \in K$, altrimenti 0. Inoltre, data una facility $k \in K$, siano: $z_k$ l'energia che acquista, $v_k$ l'energia che utilizza e $s_k$ l'energia residua al termine del time-slot.
+Gli assegnamenti sono rappresentati da variabili binarie $x_{ik}$, che assumono come valore 1 se l'AP $i$ viene assegnagno alla facility $k$, altrimenti 0. Inoltre, data una facility $k$, siano: $z_k$ l'energia che acquista, $v_k$ l'energia che utilizza e $s_k$ l'energia residua al termine del time-slot.
 
 \paragraph*{Modello.}
 
-\input{modelli/modello-migrazioni-0.tex}
+\input{modelli/modello-singolo-slot.tex}
 
 \paragraph*{Obbiettivo.}
 
-La funzione obbiettivo (\ref{eq:migr0-obj}) ha lo scopo di definire gli assegnamenti che rispecchiano il miglior trade-off tra l'ottenere una bassa latenza complessiva ed avere una spesa energetica contenuta. Da notare come prendendo in cosiderazione un singolo time-slot, non sia possibile effettuare switch e di conseguenza l'obbiettivo rispecchia quello presente nel modello di assegnamento statico (\ref{eq:migrinf-obj}).
+La funzione obbiettivo (\ref{eq:singolo-obj}) ha lo scopo di definire gli assegnamenti che rispecchiano il miglior trade-off tra l'ottenere una bassa latenza complessiva ed avere una spesa energetica contenuta. Da notare come prendendo in cosiderazione un singolo time-slot, non sia possibile effettuare switch e di conseguenza l'obbiettivo rispecchia quello presente nel modello di assegnamento statico (\ref{eq:statico-obj}).
 
 \paragraph*{Vincoli.}
 
-I vincoli \ref{eq:migr0-c1} definiscono il valore delle variabili $v_k$, mentre i \ref{eq:migr0-c2} impongono di assegnare ogni AP ad esattamente una facility. I vincoli \ref{eq:migr0-c3} gestiscono l'utilizzo dell'energia, mentre i \ref{eq:migr0-c4} definiscono un limite superiore alla quantità di traffico che ogni facility può gestire. Da notare come in questo caso, trattandosi di un singolo time-slot, non viene tenuta in considerazione la possibilità di immagazzinare l'energia nella batterie, e quindi tutta quelle le quantità in eccesso saranno indicate dalle variabili $s$.
+I vincoli \ref{eq:singolo-c1} definiscono il valore delle variabili $v_k$, mentre i \ref{eq:singolo-c2} impongono di assegnare ogni AP ad esattamente una facility. I vincoli \ref{eq:singolo-c3} gestiscono l'utilizzo dell'energia, mentre i \ref{eq:singolo-c4} definiscono un limite superiore alla quantità di traffico che ogni facility può gestire. Da notare come in questo caso, trattandosi di un singolo time-slot, non viene tenuta in considerazione la possibilità di immagazzinare l'energia nella batterie, e quindi tutta la quantità in eccesso viene immagazzinata dalle variabili $s$.

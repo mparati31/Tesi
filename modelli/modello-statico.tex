@@ -1,24 +1,24 @@
 \begin{align}
     \min\quad       & \beta \sum_{t \in T} \sum_{i \in A} \sum_{k \in K}{d^t_i m_{ik} x_{ik}} + \gamma \sum_{t \in T} \sum_{k \in K}{c_k^t z_k^t}
-    \label{eq:migrinf-obj}
+    \label{eq:statico-obj}
 \end{align}
 \vspace*{-6mm}
 \begin{align}
     \text{s.t.\quad}
-    \label{eq:migrinf-c1}
+    \label{eq:statico-c1}
     & v_k^t = \sum_{i \in A}{d^t_i x_{ik}}          &   & \forall k \in K, \forall t \in T                 \\
-    \label{eq:migrinf-c2}
+    \label{eq:statico-c2}
     & \sum_{k \in K}{x_{ik}} = 1                    &   & \forall i \in A                                  \\
-    \label{eq:migrinf-c3}
+    \label{eq:statico-c3}
     & z_k^1 + e_k^1 + p_k \geq v_k^1 + g_k^1        &   & \forall k \in K                                  \\
-    \label{eq:migrinf-c4}
+    \label{eq:statico-c4}
     & z_k^t + e_k^t + g_k^{t-1} \geq v_k^t + g_k^t  &   & \forall k \in K, \forall t \in T \setminus \{1\} \\
-    \label{eq:migrinf-c5}
+    \label{eq:statico-c5}
     & g_k^t \leq G_k                                &   & \forall k \in K, \forall t \in T                 \\
-    \label{eq:migrinf-c6}
+    \label{eq:statico-c6}
     & v_k^t \leq C_k                                &   & \forall k \in K, \forall t \in T                 \\
-    \label{eq:migrinf-c7}
+    \label{eq:statico-c7}
     & x_{ik} \in \{0,1\}                            &   & \forall i \in A, \forall k \in K                 \\
-    \label{eq:migrinf-c8}
+    \label{eq:statico-c8}
     & x, g, v, z \geq 0                             &   &
 \end{align}

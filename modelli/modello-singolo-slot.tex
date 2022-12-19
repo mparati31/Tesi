@@ -1,20 +1,20 @@
 \begin{align}
     \min\quad       & \beta \sum_{i \in A} \sum_{k \in K}{d_{i} m_{ik} x_{ik}} + \gamma \sum_{k \in K}{c_k z_k}
-    \label{eq:migr0-obj}
+    \label{eq:singolo-obj}
 \end{align}
 \vspace*{-6mm}
 \begin{align}
     \text{s.t.\quad}
-    \label{eq:migr0-c1}
+    \label{eq:singolo-c1}
     & v_k = \sum_{i \in A}{d_i x_{ik}}              &   & \forall k \in K                  \\
-    \label{eq:migr0-c2}
+    \label{eq:singolo-c2}
     & \sum_{k \in K}{x_{ik}} = 1                    &   & \forall i \in A                  \\
-    \label{eq:migr0-c3}
+    \label{eq:singolo-c3}
     & z_k + e_k + p_k = v_k + s_k                   &   & \forall k \in K                  \\
-    \label{eq:migr0-c4}
+    \label{eq:singolo-c4}
     & v_k \leq C_k                                  &   & \forall k \in K                  \\
-    \label{eq:migr0-c5}
+    \label{eq:singolo-c5}
     & x_{ik} \in \{0,1\}                            &   & \forall i \in A, \forall k \in K \\
-    \label{eq:migr0-c6}
-    & x, s, v, z \geq 0                          &   &
+    \label{eq:singolo-c6}
+    & x, v, z, s \geq 0                          &   &
 \end{align}
